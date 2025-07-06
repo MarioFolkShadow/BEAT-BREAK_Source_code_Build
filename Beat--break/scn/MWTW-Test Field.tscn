@@ -1,0 +1,76 @@
+[gd_scene load_steps=7 format=3 uid="uid://cdsoujo3y0flw"]
+
+[ext_resource type="PackedScene" uid="uid://c8cwctwd78gb" path="res://iscn/placehold-player.tscn" id="1_fm5yf"]
+[ext_resource type="PackedScene" uid="uid://c2rug5d5fm342" path="res://iscn/enemi-dummy.tscn" id="3_pfgax"]
+[ext_resource type="Texture2D" uid="uid://hv846ly3b0c7" path="res://Texture/icon.svg" id="4_0g5rm"]
+
+[sub_resource type="GDScript" id="GDScript_fuxow"]
+resource_name = "Health"
+script/source = "extends Label
+
+@onready var player = get_node(\"/root/Test Field/PlaceHPlayer\")
+
+func _process(_delta: float) -> void:
+	text = \"Health: %d\" %player.health
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jonki"]
+size = Vector2(79, 510.5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_crgqn"]
+size = Vector2(128, 128)
+
+[node name="Test Field" type="Node2D"]
+metadata/_edit_lock_ = true
+
+[node name="Version" type="Label" parent="."]
+offset_left = 800.0
+offset_top = 622.0
+offset_right = 1148.0
+offset_bottom = 645.0
+text = "Project: Rythm Prototype 2 (0.0.02bd-250604)"
+horizontal_alignment = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="PlaceHolder Health indicator" type="Label" parent="."]
+offset_left = 8.0
+offset_top = 620.0
+offset_right = 48.0
+offset_bottom = 643.0
+script = SubResource("GDScript_fuxow")
+
+[node name="Dummy" parent="." groups=["Non-moving enemies"] instance=ExtResource("3_pfgax")]
+position = Vector2(672, 461)
+
+[node name="PlaceHPlayer" parent="." groups=["Player"] instance=ExtResource("1_fm5yf")]
+position = Vector2(427, 410)
+scale = Vector2(0.5, 0.5)
+
+[node name="Wall of Godot" type="StaticBody2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="Wall of Godot"]
+position = Vector2(1078, 290.25)
+scale = Vector2(0.609375, 3.91016)
+texture = ExtResource("4_0g5rm")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Wall of Godot" groups=["Collisions(Test)"]]
+position = Vector2(1077.5, 292.75)
+shape = SubResource("RectangleShape2D_jonki")
+
+[node name="Floor" type="StaticBody2D" parent="."]
+position = Vector2(-231, 290)
+scale = Vector2(2.52, 1)
+collision_layer = 3
+collision_mask = 3
+
+[node name="Sprite2D" type="Sprite2D" parent="Floor"]
+position = Vector2(321, 261)
+scale = Vector2(3.48438, 0.21875)
+texture = ExtResource("4_0g5rm")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Floor" groups=["Collisions(Test)"]]
+position = Vector2(321, 260)
+scale = Vector2(3.48438, 0.21875)
+shape = SubResource("RectangleShape2D_crgqn")
+
+[connection signal="attacked" from="Dummy" to="PlaceHPlayer" method="_on_dummy_attacked"]

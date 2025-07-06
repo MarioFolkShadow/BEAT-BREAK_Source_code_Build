@@ -1,0 +1,49 @@
+[gd_scene load_steps=6 format=3 uid="uid://c8cwctwd78gb"]
+
+[ext_resource type="Script" uid="uid://col6k2t865of6" path="res://src/MwtW-player_logic.gd" id="1_k63jn"]
+[ext_resource type="Texture2D" uid="uid://hv846ly3b0c7" path="res://Texture/icon.svg" id="1_xhfnw"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_k63jn"]
+size = Vector2(180, 150)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ps5ko"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_xhfnw")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xhfnw"]
+size = Vector2(129, 129)
+
+[node name="CharacterBody2D" type="CharacterBody2D"]
+collision_layer = 18
+script = ExtResource("1_k63jn")
+
+[node name="Dash hitbox area" type="Area2D" parent="."]
+collision_layer = 8
+collision_mask = 16
+monitoring = false
+
+[node name="Dash Collision" type="CollisionShape2D" parent="Dash hitbox area"]
+shape = SubResource("RectangleShape2D_k63jn")
+debug_color = Color(1, 0.32549, 0, 0.321569)
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_ps5ko")
+animation = &"Idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." groups=["Player"]]
+shape = SubResource("RectangleShape2D_xhfnw")
+debug_color = Color(0, 0.6, 0.701961, 0.313726)
+
+[node name="Invincible timer" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+ignore_time_scale = true
+
+[connection signal="timeout" from="Invincible timer" to="." method="_on_invincible_timer_timeout"]
